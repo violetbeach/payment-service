@@ -1,5 +1,6 @@
 package com.violetbeach.membership.adapter.out.persistence;
 
+import com.violetbeach.membership.application.port.out.FindMembershipPort;
 import com.violetbeach.membership.application.port.out.RegisterMembershipPort;
 import com.violetbeach.membership.domain.Membership;
 import com.violetbeach.membership.domain.Membership.MembershipAddress;
@@ -12,7 +13,7 @@ import lombok.RequiredArgsConstructor;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
-class MembershipPersistenceAdapter implements RegisterMembershipPort {
+class MembershipPersistenceAdapter implements RegisterMembershipPort, FindMembershipPort {
     private final SpringDataMembershipRepository membershipRepository;
     private final MembershipMapper membershipMapper;
 
@@ -30,5 +31,12 @@ class MembershipPersistenceAdapter implements RegisterMembershipPort {
             )
         );
         return membershipMapper.mapToDomainEntity(entity);
+    }
+
+    @Override
+    public Membership findMembership(Membership.MembershipId membershipId) {
+        return membershipMapper.mapToDomainEntity(
+            membershipRepository.getReferenceById(Long.parseLong(membershipId.getMembershipId()))
+        );
     }
 }
