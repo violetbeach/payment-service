@@ -10,7 +10,7 @@ import com.violetbeach.membership.domain.Membership.MembershipId;
 import com.violetbeach.membership.domain.Membership.MembershipIsCorp;
 import com.violetbeach.membership.domain.Membership.MembershipIsValid;
 import com.violetbeach.membership.domain.Membership.MembershipName;
-import common.PersistenceAdapter;
+import com.violetbeach.common.PersistenceAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.transaction.annotation.Transactional;
 

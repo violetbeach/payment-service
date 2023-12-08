@@ -4,7 +4,7 @@ import com.violetbeach.membership.application.port.in.FindMembershipCommand;
 import com.violetbeach.membership.application.port.in.FindMembershipUseCase;
 import com.violetbeach.membership.application.port.out.FindMembershipPort;
 import com.violetbeach.membership.domain.Membership;
-import common.UseCase;
+import com.violetbeach.common.UseCase;
 import lombok.RequiredArgsConstructor;
 
 @UseCase

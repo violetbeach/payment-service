@@ -3,7 +3,7 @@ package com.violetbeach.membership.adapter.in.web;
 import com.violetbeach.membership.application.port.in.RegisterMembershipCommand;
 import com.violetbeach.membership.application.port.in.RegisterMembershipUseCase;
 import com.violetbeach.membership.domain.Membership;
-import common.WebAdapter;
+import com.violetbeach.common.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

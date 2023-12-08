@@ -3,7 +3,7 @@ package com.violetbeach.membership.adapter.in.web;
 import com.violetbeach.membership.application.port.in.FindMembershipCommand;
 import com.violetbeach.membership.application.port.in.FindMembershipUseCase;
 import com.violetbeach.membership.domain.Membership;
-import common.WebAdapter;
+import com.violetbeach.common.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
