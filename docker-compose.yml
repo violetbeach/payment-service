@@ -50,6 +50,7 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=payment.logging.out.stdout
+      - SERVICE_MEMBERSHIP_URL=http://membership-service:8080
 
   money-service:
     image: payment-money-service:1.0.0
