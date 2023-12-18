@@ -68,6 +68,9 @@ services:
       - SPRING_JPA_HIBERNATE_DDL_AUTO=create-drop
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=payment.logging.out.stdout
+      - TASK_TOPIC=payment.task.topic
+      - TASK_RESULT_TOPIC=payment.task.result.topic
+      - SERVICE_MEMBERSHIP_URL=http://membership-service:8080
 
   zookeeper:
     image: 'arm64v8/zookeeper:3.8'
