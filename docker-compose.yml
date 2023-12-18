@@ -130,6 +130,20 @@ services:
       - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
       - LOGGING_TOPIC=payment.logging.out.stdout
 
+  task-consumer:
+    image: payment-task-consumer:1.0.0
+    networks:
+      - payment_service_network
+    restart: always
+    depends_on:
+      - kafka
+      - zookeeper
+    environment:
+      - KAFKA_CLUSTERS_BOOTSTRAPSERVERS=kafka:29092
+      - LOGGING_TOPIC=payment.logging.out.stdout
+      - TASK_TOPIC=payment.task.topic
+      - TASK_RESULT_TOPIC=payment.task.result.topic
+
 networks:
   payment_service_network:
     driver: bridge
