@@ -48,6 +48,16 @@ public class RequestMoneyChangingController {
             moneyChangingRequest.getChangingMoneyAmount());
     }
 
+    @PostMapping(path = "/increase-axon")
+    void increaseMoneyChangingRequestByEvent(@RequestBody IncreaseMoneyChangingRequest request) {
+        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
+            .targetMembershipId(request.targetMembershipId())
+            .amount(request.amount())
+            .build();
+
+        increaseMoneyRequestUseCase.increaseMoneyRequestByEvent(command);
+    }
+
     @PostMapping
     void createMemberMoney(@RequestBody CreateMemberMoneyRequest request) {
         CreateMemberMoneyRequestCommand command = CreateMemberMoneyRequestCommand.builder()

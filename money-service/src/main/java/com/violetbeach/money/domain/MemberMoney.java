@@ -1,5 +1,6 @@
 package com.violetbeach.money.domain;
 
+import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,16 +12,19 @@ public class MemberMoney {
     private final String memberMoneyId;
     private final String membershipId;
     private final int balance;
+    private final String aggregateIdentifier;
 
     public static MemberMoney generateMemberMoney (
         MemberMoneyId memberMoneyId,
         MembershipId membershipId,
-        MoneyBalance moneyBalance
+        MoneyBalance moneyBalance,
+        MoneyAggregateIdentifier moneyAggregateIdentifier
     ){
         return new MemberMoney(
             memberMoneyId.memberMoneyId,
             membershipId.membershipId,
-            moneyBalance.balance
+            moneyBalance.balance,
+            moneyAggregateIdentifier.getAggregateIdentifier()
         );
     }
 

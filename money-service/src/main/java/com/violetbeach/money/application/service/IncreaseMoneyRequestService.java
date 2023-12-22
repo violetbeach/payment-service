@@ -4,8 +4,10 @@ import com.violetbeach.common.CountDownLatchManager;
 import com.violetbeach.common.UseCase;
 import com.violetbeach.common.task.RechargingMoneyTask;
 import com.violetbeach.common.task.SubTask;
+import com.violetbeach.money.adapter.axon.command.IncreaseMoneyRequestEventCommand;
 import com.violetbeach.money.application.port.in.IncreaseMoneyRequestCommand;
 import com.violetbeach.money.application.port.in.IncreaseMoneyRequestUseCase;
+import com.violetbeach.money.application.port.out.GetMemberMoneyPort;
 import com.violetbeach.money.application.port.out.IncreaseMoneyPort;
 import com.violetbeach.money.application.port.out.SendRechargingMoneyTaskPort;
 import com.violetbeach.money.domain.MemberMoney;
@@ -15,13 +17,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.axonframework.commandhandling.gateway.CommandGateway;
 
 @UseCase
 @RequiredArgsConstructor
 public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
     private final IncreaseMoneyPort increaseMoneyPort;
     private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
+    private final GetMemberMoneyPort getMemberMoneyPort;
     private final CountDownLatchManager countDownLatchManager;
+    private final CommandGateway commandGateway;
 
     /**
      * 1. 고객 정보가 정상인지 확인 (멤버)
@@ -120,5 +125,33 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
             // 4-2. Consume fail, Logic
             return null;
         }
+    }
+
+    @Override
+    public void increaseMoneyRequestByEvent(IncreaseMoneyRequestCommand command) {
+        MemberMoney memberMoney = getMemberMoneyPort.getMemberMoney(
+            new MembershipId(command.getTargetMembershipId()));
+        String moneyIdentifier = memberMoney.getAggregateIdentifier();
+
+        // String moneyIdentifier = memberMoneyEntity.getAggregateIdentifier();
+        IncreaseMoneyRequestEventCommand eventCommand = IncreaseMoneyRequestEventCommand.builder()
+            .aggregateIdentifier(moneyIdentifier)
+            .targetMembershipId(command.getTargetMembershipId())
+            .amount(command.getAmount())
+            .build();
+
+        commandGateway.send(eventCommand)
+            .whenComplete((Object result, Throwable throwable) -> {
+                if (throwable == null) {
+                    System.out.println("Aggregate ID:" + result.toString());
+
+                    increaseMoneyPort.increaseMoney(
+                        new MemberMoney.MembershipId(command.getTargetMembershipId())
+                        , command.getAmount());
+
+                } else {
+                    throw new RuntimeException(throwable);
+                }
+            });
     }
 }
