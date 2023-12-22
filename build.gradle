@@ -24,6 +24,10 @@ subprojects {
 		mavenCentral()
 	}
 
+	ext{
+		axonVersion = '4.9.1'
+	}
+
 	dependencies {
 		compileOnly 'org.projectlombok:lombok'
 		annotationProcessor 'org.projectlombok:lombok'

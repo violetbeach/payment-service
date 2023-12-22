@@ -1,6 +1,8 @@
 package com.violetbeach.money.adapter.in.web;
 
 import com.violetbeach.common.WebAdapter;
+import com.violetbeach.money.application.port.in.CreateMemberMoneyRequestCommand;
+import com.violetbeach.money.application.port.in.CreateMemberMoneyRequestUseCase;
 import com.violetbeach.money.application.port.in.IncreaseMoneyRequestCommand;
 import com.violetbeach.money.application.port.in.IncreaseMoneyRequestUseCase;
 import com.violetbeach.money.domain.MoneyChangingRequest;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class RequestMoneyChangingController {
     private final IncreaseMoneyRequestUseCase increaseMoneyRequestUseCase;
+    private final CreateMemberMoneyRequestUseCase createMemberMoneyRequestUseCase;
 
     @PostMapping(path = "/increase")
     MoneyChangingResultDetail increaseMoneyChangingRequest(@RequestBody IncreaseMoneyChangingRequest request) {
@@ -43,5 +46,13 @@ public class RequestMoneyChangingController {
             0,
             0,
             moneyChangingRequest.getChangingMoneyAmount());
+    }
+
+    @PostMapping
+    void createMemberMoney(@RequestBody CreateMemberMoneyRequest request) {
+        CreateMemberMoneyRequestCommand command = CreateMemberMoneyRequestCommand.builder()
+            .targetMembershipId(request.targetMembershipId())
+            .build();
+        createMemberMoneyRequestUseCase.createMoney(command);
     }
 }
