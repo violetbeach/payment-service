@@ -1,8 +1,11 @@
 package com.violetbeach.banking.application.service;
 
 import com.violetbeach.banking.adapter.axon.command.CreateRequestFirmBankingCommand;
+import com.violetbeach.banking.adapter.axon.command.UpdateRequestFirmBankingCommand;
 import com.violetbeach.banking.application.port.in.RequestFirmBankingCommand;
 import com.violetbeach.banking.application.port.in.RequestFirmBankingUseCase;
+import com.violetbeach.banking.application.port.in.UpdateFirmBankingCommand;
+import com.violetbeach.banking.application.port.in.UpdateFirmBankingUseCase;
 import com.violetbeach.banking.application.port.out.RequestExternalFirmBankingPort;
 import com.violetbeach.banking.application.port.out.RequestFirmBankingPort;
 import com.violetbeach.banking.domain.ExternalFirmBankingRequest;
@@ -21,7 +24,8 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 
 @UseCase
 @RequiredArgsConstructor
-public class RequestFirmBankingService implements RequestFirmBankingUseCase {
+public class RequestFirmBankingService implements RequestFirmBankingUseCase,
+    UpdateFirmBankingUseCase {
 
     private final RequestFirmBankingPort requestFirmbankingPort;
     private final RequestExternalFirmBankingPort requestExternalFirmbankingPort;
@@ -63,6 +67,30 @@ public class RequestFirmBankingService implements RequestFirmBankingUseCase {
                 requestFirmbankingPort.modifyFirmBankingRequest(firmBankingRequest);
             } else {
                 throw new RuntimeException(throwable);
+            }
+        });
+    }
+
+    @Override
+    public void updateFirmBanking(UpdateFirmBankingCommand command) {
+        commandGateway.send(new UpdateRequestFirmBankingCommand(
+            command.getFirmBankingAggregateIdentifier(),
+            command.getFirmBankingStatus()
+        )).whenComplete((result, throwable) -> {
+            if (throwable == null) {
+                FirmBankingRequest firmBankingRequest = requestFirmbankingPort.getFirmBankingRequest(
+                    new FirmBankingRequest.FirmBankingAggregateIdentifier(result.toString())
+                );
+
+                // 2. 외부 은행에 펌뱅킹 요청
+                if (command.getFirmBankingStatus() == 0) {
+                    firmBankingRequest.setCompleted();
+                } else {
+                    firmBankingRequest.setFailed();
+                }
+                requestFirmbankingPort.modifyFirmBankingRequest(firmBankingRequest);
+            } else {
+                throwable.printStackTrace();
             }
         });
     }

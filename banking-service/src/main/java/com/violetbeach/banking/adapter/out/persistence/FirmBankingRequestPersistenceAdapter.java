@@ -2,6 +2,7 @@ package com.violetbeach.banking.adapter.out.persistence;
 
 import com.violetbeach.banking.application.port.out.RequestFirmBankingPort;
 import com.violetbeach.banking.domain.FirmBankingRequest;
+import com.violetbeach.banking.domain.FirmBankingRequest.FirmBankingAggregateIdentifier;
 import com.violetbeach.common.PersistenceAdapter;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingPort {
+
     private final SpringDataFirmBankingRequestRepository firmBankingRequestRepository;
     private final FirmBankingRequestMapper mapper;
 
@@ -42,6 +44,14 @@ class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingPort {
         UUID newUuid = UUID.randomUUID();
         entity.setUuid(newUuid.toString());
         firmBankingRequestRepository.save(entity);
+        return mapper.mapToDomainEntity(entity);
+    }
+
+    @Override
+    public FirmBankingRequest getFirmBankingRequest(FirmBankingAggregateIdentifier identifier) {
+        FirmBankingRequestJpaEntity entity = firmBankingRequestRepository.getByAggregateIdentifier(
+            identifier.getAggregateIdentifier());
+
         return mapper.mapToDomainEntity(entity);
     }
 }
