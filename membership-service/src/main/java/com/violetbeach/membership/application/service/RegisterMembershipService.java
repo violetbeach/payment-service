@@ -1,15 +1,16 @@
 package com.violetbeach.membership.application.service;
 
+import com.violetbeach.common.UseCase;
 import com.violetbeach.membership.application.port.in.RegisterMembershipCommand;
 import com.violetbeach.membership.application.port.in.RegisterMembershipUseCase;
 import com.violetbeach.membership.application.port.out.RegisterMembershipPort;
 import com.violetbeach.membership.domain.Membership;
-import com.violetbeach.common.UseCase;
 import lombok.RequiredArgsConstructor;
 
 @UseCase
 @RequiredArgsConstructor
 public class RegisterMembershipService implements RegisterMembershipUseCase {
+
     private final RegisterMembershipPort registerMembershipPort;
 
     @Override

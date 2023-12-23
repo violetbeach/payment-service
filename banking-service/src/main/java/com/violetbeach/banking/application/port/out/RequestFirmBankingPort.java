@@ -3,6 +3,7 @@ package com.violetbeach.banking.application.port.out;
 import com.violetbeach.banking.domain.FirmBankingRequest;
 
 public interface RequestFirmBankingPort {
+
     FirmBankingRequest createFirmBankingRequest(
         FirmBankingRequest.FromBankName fromBankName,
         FirmBankingRequest.FromBankAccountNumber fromBankAccountNumber,
