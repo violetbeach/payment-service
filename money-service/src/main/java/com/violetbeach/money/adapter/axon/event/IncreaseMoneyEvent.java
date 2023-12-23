@@ -15,10 +15,8 @@ import lombok.NoArgsConstructor;
 public class IncreaseMoneyEvent extends SelfValidating<IncreaseMoneyRequestCommand>  {
     @NotNull
     private String aggregateIdentifier;
-
     @NotNull
     private String targetMembershipId;
-
     @NotNull
     private int amount;
 

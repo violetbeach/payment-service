@@ -13,49 +13,37 @@ import org.springframework.web.bind.annotation.RequestBody;
 @WebAdapter(path = "/money")
 @RequiredArgsConstructor
 public class RequestMoneyChangingController {
+
     private final IncreaseMoneyRequestUseCase increaseMoneyRequestUseCase;
     private final CreateMemberMoneyRequestUseCase createMemberMoneyRequestUseCase;
 
     @PostMapping(path = "/increase")
-    MoneyChangingResultDetail increaseMoneyChangingRequest(@RequestBody IncreaseMoneyChangingRequest request) {
+    void increaseMoneyChangingRequest(
+        @RequestBody IncreaseMoneyChangingRequest request) {
         IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
             .targetMembershipId(request.targetMembershipId())
             .amount(request.amount())
             .build();
 
-        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequest(command);
-
-        return new MoneyChangingResultDetail(
-            moneyChangingRequest.getMoneyChangingRequestId(),
-            0,
-            0,
-            moneyChangingRequest.getChangingMoneyAmount());
+        increaseMoneyRequestUseCase.increaseMoneyRequest(command);
     }
 
     @PostMapping(path = "/increase-async")
-    MoneyChangingResultDetail increaseMoneyChangingRequestAsync(@RequestBody IncreaseMoneyChangingRequest request) {
+    MoneyChangingResultDetail increaseMoneyChangingRequestAsync(
+        @RequestBody IncreaseMoneyChangingRequest request) {
         IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
             .targetMembershipId(request.targetMembershipId())
             .amount(request.amount())
             .build();
 
-        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequestAsync(command);
+        MoneyChangingRequest moneyChangingRequest = increaseMoneyRequestUseCase.increaseMoneyRequestAsync(
+            command);
 
         return new MoneyChangingResultDetail(
             moneyChangingRequest.getMoneyChangingRequestId(),
             0,
             0,
             moneyChangingRequest.getChangingMoneyAmount());
-    }
-
-    @PostMapping(path = "/increase-axon")
-    void increaseMoneyChangingRequestByEvent(@RequestBody IncreaseMoneyChangingRequest request) {
-        IncreaseMoneyRequestCommand command = IncreaseMoneyRequestCommand.builder()
-            .targetMembershipId(request.targetMembershipId())
-            .amount(request.amount())
-            .build();
-
-        increaseMoneyRequestUseCase.increaseMoneyRequestByEvent(command);
     }
 
     @PostMapping

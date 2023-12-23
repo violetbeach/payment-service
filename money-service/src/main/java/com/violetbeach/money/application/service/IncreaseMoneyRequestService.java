@@ -22,6 +22,7 @@ import org.axonframework.commandhandling.gateway.CommandGateway;
 @UseCase
 @RequiredArgsConstructor
 public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase {
+
     private final IncreaseMoneyPort increaseMoneyPort;
     private final SendRechargingMoneyTaskPort sendRechargingMoneyTaskPort;
     private final GetMemberMoneyPort getMemberMoneyPort;
@@ -41,18 +42,31 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
      * @return
      */
     @Override
-    public MoneyChangingRequest increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
-        increaseMoneyPort.increaseMoney(
-            new MemberMoney.MembershipId(command.getTargetMembershipId()),
-            command.getAmount());
+    public void increaseMoneyRequest(IncreaseMoneyRequestCommand command) {
+        MemberMoney memberMoney = getMemberMoneyPort.getMemberMoney(
+            new MembershipId(command.getTargetMembershipId()));
+        String moneyIdentifier = memberMoney.getAggregateIdentifier();
 
-        return increaseMoneyPort.createMoneyChangingRequest(
-            new MoneyChangingRequest.TargetMembershipId(command.getTargetMembershipId()),
-            new MoneyChangingRequest.MoneyChangingType(1),
-            new MoneyChangingRequest.ChangingMoneyAmount(command.getAmount()),
-            new MoneyChangingRequest.MoneyChangingStatus(1),
-            new MoneyChangingRequest.Uuid(UUID.randomUUID().toString())
-        );
+        // String moneyIdentifier = memberMoneyEntity.getAggregateIdentifier();
+        IncreaseMoneyRequestEventCommand eventCommand = IncreaseMoneyRequestEventCommand.builder()
+            .aggregateIdentifier(moneyIdentifier)
+            .targetMembershipId(command.getTargetMembershipId())
+            .amount(command.getAmount())
+            .build();
+
+        commandGateway.send(eventCommand)
+            .whenComplete((Object result, Throwable throwable) -> {
+                if (throwable == null) {
+                    System.out.println("Aggregate ID:" + result.toString());
+
+                    increaseMoneyPort.increaseMoney(
+                        new MemberMoney.MembershipId(command.getTargetMembershipId())
+                        , command.getAmount());
+
+                } else {
+                    throw new RuntimeException(throwable);
+                }
+            });
     }
 
     @Override
@@ -110,7 +124,7 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
                 new MembershipId(command.getTargetMembershipId())
                 , command.getAmount());
 
-            if(memberMoney == null) {
+            if (memberMoney == null) {
                 return null;
             }
 
@@ -125,33 +139,5 @@ public class IncreaseMoneyRequestService implements IncreaseMoneyRequestUseCase 
             // 4-2. Consume fail, Logic
             return null;
         }
-    }
-
-    @Override
-    public void increaseMoneyRequestByEvent(IncreaseMoneyRequestCommand command) {
-        MemberMoney memberMoney = getMemberMoneyPort.getMemberMoney(
-            new MembershipId(command.getTargetMembershipId()));
-        String moneyIdentifier = memberMoney.getAggregateIdentifier();
-
-        // String moneyIdentifier = memberMoneyEntity.getAggregateIdentifier();
-        IncreaseMoneyRequestEventCommand eventCommand = IncreaseMoneyRequestEventCommand.builder()
-            .aggregateIdentifier(moneyIdentifier)
-            .targetMembershipId(command.getTargetMembershipId())
-            .amount(command.getAmount())
-            .build();
-
-        commandGateway.send(eventCommand)
-            .whenComplete((Object result, Throwable throwable) -> {
-                if (throwable == null) {
-                    System.out.println("Aggregate ID:" + result.toString());
-
-                    increaseMoneyPort.increaseMoney(
-                        new MemberMoney.MembershipId(command.getTargetMembershipId())
-                        , command.getAmount());
-
-                } else {
-                    throw new RuntimeException(throwable);
-                }
-            });
     }
 }
