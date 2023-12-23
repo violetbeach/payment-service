@@ -2,19 +2,19 @@ package com.violetbeach.banking.adapter.in.web;
 
 import com.violetbeach.banking.application.port.in.RequestFirmBankingCommand;
 import com.violetbeach.banking.application.port.in.RequestFirmBankingUseCase;
-import com.violetbeach.banking.domain.FirmBankingRequest;
 import com.violetbeach.common.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-@WebAdapter(path = "/banking/firmbanking/request")
+@WebAdapter(path = "/banking/firmbanking")
 @RequiredArgsConstructor
 public class RequestFirmBankingController {
+
     private final RequestFirmBankingUseCase requestFirmbankingUseCase;
 
-    @PostMapping
-    FirmBankingRequest requestFirmBanking(@RequestBody RequestFirmBankingRequest request) {
+    @PostMapping("/request")
+    void requestFirmBanking(@RequestBody RequestFirmBankingRequest request) {
         RequestFirmBankingCommand command = RequestFirmBankingCommand.builder()
             .toBankName(request.toBankName())
             .toBankAccountNumber(request.toBankAccountNumber())
@@ -23,6 +23,6 @@ public class RequestFirmBankingController {
             .moneyAmount(request.moneyAmount())
             .build();
 
-        return requestFirmbankingUseCase.requestFirmBanking(command);
+        requestFirmbankingUseCase.requestFirmBanking(command);
     }
 }

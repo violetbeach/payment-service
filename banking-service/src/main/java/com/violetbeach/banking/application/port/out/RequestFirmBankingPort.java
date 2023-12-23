@@ -9,7 +9,8 @@ public interface RequestFirmBankingPort {
         FirmBankingRequest.ToBankName toBankName,
         FirmBankingRequest.ToBankAccountNumber toBankAccountNumber,
         FirmBankingRequest.MoneyAmount moneyAmount,
-        FirmBankingRequest.FirmBankingStatus firmBankingStatus
+        FirmBankingRequest.FirmBankingStatus firmBankingStatus,
+        FirmBankingRequest.FirmBankingAggregateIdentifier firmBankingAggregateIdentifier
     );
 
     FirmBankingRequest modifyFirmBankingRequest(

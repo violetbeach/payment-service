@@ -15,7 +15,13 @@ class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingPort {
     private final FirmBankingRequestMapper mapper;
 
     @Override
-    public FirmBankingRequest createFirmBankingRequest(FirmBankingRequest.FromBankName fromBankName, FirmBankingRequest.FromBankAccountNumber fromBankAccountNumber, FirmBankingRequest.ToBankName toBankName, FirmBankingRequest.ToBankAccountNumber toBankAccountNumber, FirmBankingRequest.MoneyAmount moneyAmount, FirmBankingRequest.FirmBankingStatus firmBankingStatus) {
+    public FirmBankingRequest createFirmBankingRequest(FirmBankingRequest.FromBankName fromBankName,
+        FirmBankingRequest.FromBankAccountNumber fromBankAccountNumber,
+        FirmBankingRequest.ToBankName toBankName,
+        FirmBankingRequest.ToBankAccountNumber toBankAccountNumber,
+        FirmBankingRequest.MoneyAmount moneyAmount,
+        FirmBankingRequest.FirmBankingStatus firmBankingStatus,
+        FirmBankingRequest.FirmBankingAggregateIdentifier firmBankingAggregateIdentifier) {
         FirmBankingRequestJpaEntity entity = firmBankingRequestRepository.save(
             new FirmBankingRequestJpaEntity(
                 fromBankName.getFromBankName(),
@@ -23,7 +29,8 @@ class FirmBankingRequestPersistenceAdapter implements RequestFirmBankingPort {
                 toBankName.getToBankName(),
                 toBankAccountNumber.getToBankAccountNumber(),
                 moneyAmount.getMoneyAmount(), firmBankingStatus.getFirmBankingStatus(),
-                UUID.randomUUID()
+                UUID.randomUUID(),
+                firmBankingAggregateIdentifier.getAggregateIdentifier()
             )
         );
         return mapper.mapToDomainEntity(entity);

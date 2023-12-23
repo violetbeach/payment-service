@@ -12,6 +12,9 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
+    implementation "org.axonframework:axon-configuration:$axonVersion"
+    implementation "org.axonframework:axon-spring-boot-starter:$axonVersion"
+
     implementation project(':common')
 
     runtimeOnly 'com.mysql:mysql-connector-j'
