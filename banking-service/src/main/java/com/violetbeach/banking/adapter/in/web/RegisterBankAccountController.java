@@ -2,7 +2,6 @@ package com.violetbeach.banking.adapter.in.web;
 
 import com.violetbeach.banking.application.port.in.RegisterBankAccountCommand;
 import com.violetbeach.banking.application.port.in.RegisterBankAccountUseCase;
-import com.violetbeach.banking.domain.RegisteredBankAccount;
 import com.violetbeach.common.WebAdapter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,10 +10,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 @WebAdapter(path = "/banking/account")
 @RequiredArgsConstructor
 public class RegisterBankAccountController {
+
     private final RegisterBankAccountUseCase registeredBankAccountUseCase;
 
     @PostMapping
-    RegisteredBankAccount registerBankAccount(@RequestBody RegisterBankAccountRequest request) {
+    void registerBankAccount(@RequestBody RegisterBankAccountRequest request) {
         RegisterBankAccountCommand command = RegisterBankAccountCommand.builder()
             .membershipId(request.membershipId())
             .bankName(request.bankName())
@@ -22,6 +22,6 @@ public class RegisterBankAccountController {
             .isValid(request.isValid())
             .build();
 
-        return registeredBankAccountUseCase.registerBankAccount(command);
+        registeredBankAccountUseCase.registerBankAccount(command);
     }
 }

@@ -21,24 +21,24 @@ public class FirmBankingRequest {
     private final String aggregateIdentifier;
 
     public static FirmBankingRequest generateFirmBankingRequest(
-        FirmBankingRequestId firmbankingRequestId,
+        FirmBankingRequestId firmBankingingRequestId,
         FromBankName fromBankName,
         FromBankAccountNumber fromBankAccountNumber,
         ToBankName toBankName,
         ToBankAccountNumber toBankAccountNumber,
         MoneyAmount moneyAmount,
-        FirmBankingStatus firmbankingStatus,
+        FirmBankingStatus firmBankingingStatus,
         UUID uuid,
         FirmBankingAggregateIdentifier firmBankingAggregateIdentifier
     ) {
         return new FirmBankingRequest(
-            firmbankingRequestId.getFirmBankingRequestId(),
+            firmBankingingRequestId.getFirmBankingRequestId(),
             fromBankName.getFromBankName(),
             fromBankAccountNumber.getFromBankAccountNumber(),
             toBankName.getToBankName(),
             toBankAccountNumber.getToBankAccountNumber(),
             moneyAmount.getMoneyAmount(),
-            firmbankingStatus.firmBankingStatus,
+            firmBankingingStatus.firmBankingStatus,
             uuid,
             firmBankingAggregateIdentifier.getAggregateIdentifier()
         );

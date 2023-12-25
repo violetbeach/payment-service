@@ -1,6 +1,6 @@
 package com.violetbeach.banking.adapter.out.external.bank;
 
-import com.violetbeach.banking.application.port.out.BankAccountInfoRequest;
+import com.violetbeach.banking.application.port.out.GetBankAccountRequest;
 import com.violetbeach.banking.application.port.out.RequestBankAccountInfoPort;
 import com.violetbeach.banking.application.port.out.RequestExternalFirmBankingPort;
 import com.violetbeach.banking.domain.BankAccount;
@@ -12,13 +12,15 @@ import lombok.RequiredArgsConstructor;
 @ExternalBankSystemAdapter
 @RequiredArgsConstructor
 class BankAccountAdapter implements RequestBankAccountInfoPort, RequestExternalFirmBankingPort {
+
     @Override
-    public BankAccount getBankAccountInfo(BankAccountInfoRequest request) {
+    public BankAccount getBankAccountInfo(GetBankAccountRequest request) {
         return new BankAccount(request.bankName(), request.bankAccountNumber(), true);
     }
 
     /**
      * 외부 은행의 동작을 Mocking
+     *
      * @param request
      * @return
      */

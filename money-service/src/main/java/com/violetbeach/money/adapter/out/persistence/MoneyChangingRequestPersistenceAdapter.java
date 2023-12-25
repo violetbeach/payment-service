@@ -65,7 +65,7 @@ class MoneyChangingRequestPersistenceAdapter implements IncreaseMoneyPort, Creat
 
     @Override
     public MemberMoney getMemberMoney(MembershipId memberId) {
-        MemberMoneyJpaEntity entity = memberMoneyRepository.getReferenceById(
+        MemberMoneyJpaEntity entity = memberMoneyRepository.getByMembershipId(
             Long.parseLong(memberId.getMembershipId()));
 
         return memberMoneyMapper.mapToDomainEntity(entity);
